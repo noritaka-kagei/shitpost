@@ -1,5 +1,7 @@
 package com.noritakakagei.sample.aop;
 
+import java.util.logging.Logger;
+import java.util.logging.Level;
 import java.text.SimpleDateFormat;
 
 import org.aspectj.lang.JoinPoint;
@@ -16,6 +18,7 @@ import org.springframework.stereotype.Component;
 @Aspect
 @Component
 public class SampleAspect {
+    private static final Logger logger = Logger.getLogger(SampleAspect.class.getName());
 
     /**
      * Target Advice(method): com.noritakakagei.sample.di.*Greet.greeting(args)
@@ -23,10 +26,10 @@ public class SampleAspect {
      */
     // @Before("execution(* com.noritakakagei.sample.di.*Greet.*(..))")
     public void beforeAdvice(JoinPoint joinPoint) {
-        System.out.println("===== Called Before Advice func. =====");
+        logger.log(Level.INFO, "===== Called Before Advice func. =====");
         outputDate();
-        System.out.println(String.format("Method: %s", joinPoint.getSignature().getName()));
-        System.out.println("======================================");
+        logger.log(Level.INFO, String.format("Method: %s", joinPoint.getSignature().getName()));
+        logger.log(Level.INFO, "======================================");
     }
 
     /**
@@ -35,10 +38,10 @@ public class SampleAspect {
      */
     // @After("execution(* com.noritakakagei.sample.di.*Greet.*(..))")
     public void afterAdvice(JoinPoint joinPoint) {
-        System.out.println("===== Called After Advice func. =====");
+        logger.log(Level.INFO, "===== Called After Advice func. =====");
         outputDate();
-        System.out.println(String.format("Method: %s", joinPoint.getSignature().getName()));
-        System.out.println("======================================");
+        logger.log(Level.INFO, String.format("Method: %s", joinPoint.getSignature().getName()));
+        logger.log(Level.INFO, "======================================");
     }
 
     /**
@@ -49,11 +52,11 @@ public class SampleAspect {
      */
     @Around("execution(* com.noritakakagei.sample.di.*Greet.*(..))")
     public Object aroundAdvice(ProceedingJoinPoint joinPoint) throws Throwable {
-        System.out.println("===== Called Around Advice func. =====");
+        logger.log(Level.INFO, "===== Called Around Advice func. =====");
         outputDate();
-        System.out.println("[BEFORE] executing advice(method).");
+        logger.log(Level.INFO, "[BEFORE] executing advice(method).");
         Object result = joinPoint.proceed();
-        System.out.println("[AFTER] executing advice(method).");
+        logger.log(Level.INFO, "[AFTER] executing advice(method).");
         return result;
     }
 
@@ -63,6 +66,6 @@ public class SampleAspect {
     private void outputDate() {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd");
         java.util.Date date = new java.util.Date();
-        System.out.println(String.format("Executed date: %s",formatter.format(date)));
+        logger.log(Level.INFO, String.format("Executed date: %s",formatter.format(date)));
     }
 }
