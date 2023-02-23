@@ -3,9 +3,11 @@ package com.noritakakagei.sample;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import com.noritakakagei.sample.di.*;
 
 /**
  * SpringBoot Launcher class
+ * @author noritaka-kagei
  */
 @SpringBootApplication
 public class ShitpostApplication {

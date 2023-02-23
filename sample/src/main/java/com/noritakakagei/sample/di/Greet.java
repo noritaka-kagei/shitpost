@@ -1,4 +1,4 @@
-package com.noritakakagei.sample;
+package com.noritakakagei.sample.di;
 
 public interface Greet {
     void greeting();
