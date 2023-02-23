@@ -10,6 +10,9 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.springframework.stereotype.Component;
 
+/**
+ * Implemented AOP class
+ */
 @Aspect
 @Component
 public class SampleAspect {
