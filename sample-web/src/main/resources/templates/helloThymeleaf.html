@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<!-- Declare to use Thymeleaf -->
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8">
+        <title>Hello Thymeleaf</title>
+    </head>
+    <body>
+        <h1 th:text="${message}">It's not working on Thymeleaf... :(</h1>
+        message variable = "[[${message}]]"
+    </body>
+</html>
