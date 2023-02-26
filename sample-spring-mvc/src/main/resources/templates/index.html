@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8">
+        <title>Index page used Thymeleaf template engine!</title>
+    </head>
+
+    <body>
+        <h1 th:text="|It works!!!|"></h1>
+        <p>
+            The program consists of Spring MVC and Thymeleaf (+Layout) template engine.    
+        </p>
+
+        <div th:switch="${name}">
+            <p th:case="noritaka" th:text="|Maintainer: this project's Contributor|"></p>
+            <p th:case="*" th:text="Unknown Maintainer"></p>
+        </div> 
+
+
+        <p>
+            Registered Member Object is following.<br>
+            <th:block th:each="member : ${list}">
+                <span th:text="|ID: ${member.id}|">Unknown ID</span><br>
+                <span th:text="|Name: ${member.name}|">Unknown Name</span><br>    
+            </th:block>    
+        </p>
+    </body>
+</html>
