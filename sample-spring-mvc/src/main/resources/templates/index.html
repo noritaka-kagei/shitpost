@@ -17,12 +17,22 @@
         </div> 
 
 
+        <!-- output member list by using for-each grammer -->
         <p>
             Registered Member Object is following.<br>
-            <th:block th:each="member : ${list}">
-                <span th:text="|ID: ${member.id}|">Unknown ID</span><br>
+            <th:block th:each="member, status : ${list}">
+                <span th:text="| - member[${status.index}] -> |"></span>
+                <span th:text="|ID: ${member.id}|">Unknown ID</span>, 
                 <span th:text="|Name: ${member.name}|">Unknown Name</span><br>    
             </th:block>    
+        </p>
+
+        <!-- output current time when accessing this page -->
+        <p th:with="today=${#dates.createNow()}">
+            Accessed at 
+            <th:block th:text="${#dates.format(today, 'yyyy/MM/dd')}"></th:block>
+            <!-- (<th:block th:text="${#dates.dayOfWeek(today)}"></th:block>) -->
+            .
         </p>
     </body>
 </html>
