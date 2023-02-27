@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+                xmlns:layout="http://ultraq.net.nz/thymeleaf/layout">
+    <head>
+        <meta charset="UTF-8">
+        <title>Layout</title>
+    </head>
+
+    <body>
+        <!-- Common Header -->
+        <header>
+            <h3>Abstract</h3>
+            <p>
+                The program consists of Spring MVC and Thymeleaf (+Layout Dialect) template engine.    
+            </p>
+            <hr />    
+        </header>
+
+        <!-- Main Contents -->
+        <div layout:fragment="content" align="center">
+            <!-- replace it -->
+        </div>
+
+        <!-- Common Footer -->
+        <footer>
+            <hr />
+            <h3>Accessed date</h3>
+            <p th:with="today=${#dates.createNow()}">
+                <th:block th:text="${#dates.format(today, 'yyyy/MM/dd')}"></th:block>
+                <!-- (<th:block th:text="${#dates.dayOfWeek(today)}"></th:block>) -->
+            </p>    
+        </footer>
+    </body>
+</html>
