@@ -27,7 +27,6 @@
             <h3>Accessed date</h3>
             <p th:with="today=${#dates.createNow()}">
                 <th:block th:text="${#dates.format(today, 'yyyy/MM/dd')}"></th:block>
-                <!-- (<th:block th:text="${#dates.dayOfWeek(today)}"></th:block>) -->
             </p>    
         </footer>
     </body>
