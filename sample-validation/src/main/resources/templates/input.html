@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8">
+        <title>Input Page</title>
+    </head>
+
+    <body>
+        <form th:action="@{/calc}" method="post" th:object="${calcForm}">
+            <!-- Error info -->
+            <ul th:if="${#fields.hasErrors('*')}">
+                <font color="red">ERROR</font>
+                <th:block th:each="err : ${#fields.errors('*')}">
+                    <li><font color="red" th:text="${err}"></font></li>
+                </th:block>
+            </ul>
+    
+            <!-- Form for calculating -->
+            <input type="text" th:field="*{leftNum}"> + <input type="text" th:field="*{rightNum}">
+            <input type="submit" value="Send!">
+        </form>
+    </body>
+</html>
