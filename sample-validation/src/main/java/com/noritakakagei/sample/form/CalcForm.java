@@ -9,10 +9,11 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class CalcForm {
-    @NotNull(message = "input the number to the left side")
+    @NotNull
     @Range(min = 1, max = 10, message = "input the number in {min}~{max} to the left side")
     private Integer leftNum;
-    @NotNull(message = "input the number to the right side")
+    
+    @NotNull
     @Range(min = 1, max = 10, message = "input the number in {min}~{max} to the right side")
     private Integer rightNum;
 }
