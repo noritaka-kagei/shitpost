@@ -8,6 +8,7 @@
     <body>
         <h1 th:text="|It works!!!|"></h1>
         <p>
+            <h3>Abstract</h3>
             The program consists of Spring MVC and Thymeleaf (+Layout) template engine.    
         </p>
 
@@ -17,12 +18,27 @@
         </div> 
 
 
+        <!-- output member list by using for-each grammer -->
         <p>
-            Registered Member Object is following.<br>
-            <th:block th:each="member : ${list}">
-                <span th:text="|ID: ${member.id}|">Unknown ID</span><br>
+            <h3>Registered Member Object is following.</h3>
+            <th:block th:each="member, status : ${list}">
+                <span th:text="| - member[${status.index}] -> |"></span>
+                <span th:text="|ID: ${member.id}|">Unknown ID</span>, 
                 <span th:text="|Name: ${member.name}|">Unknown Name</span><br>    
             </th:block>    
         </p>
+
+        <!-- output current time when accessing this page -->
+        <h3>Accessed date</h3>
+        <p th:with="today=${#dates.createNow()}">
+            <th:block th:text="${#dates.format(today, 'yyyy/MM/dd')}"></th:block>
+            <!-- (<th:block th:text="${#dates.dayOfWeek(today)}"></th:block>) -->
+        </p>
+
+        <!-- use Fragment statement -->
+        <h3>Fragment statement</h3>
+        <p th:insert="fragment :: one"></p>
+        <p th:insert="fragment :: two"></p>
+        <p th:insert="fragment :: three"></p>
     </body>
 </html>

@@ -35,4 +35,9 @@ public class ThymeleafController {
         model.addAttribute("name", "noritaka");
         return "index";
     }
+
+    @GetMapping("welcome*")
+    public String showWelcome() {
+        return "welcome";
+    }
 }
