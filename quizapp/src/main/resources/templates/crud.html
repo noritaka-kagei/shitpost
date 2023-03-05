@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8">
+        <title>Quiz Application</title>
+    </head>
+
+    <body>
+        <h1>Quiz Application | CRUD</h1>
+        <h3 th:text="${title}">Sub Title</h3>
+
+        <!-- done message -->
+        <p th:if="${complete}" th:text="${complete}" style="color: aquamarine;"></p>
+
+        <!-- quiz form -->
+        <form method="POST"
+            th:action="${quizForm.newQuiz} ? @{/quiz/insert} : @{/quiz/update}"
+            th:object="${quizForm}">
+            <!-- Format
+                1st line: Label name
+                2nd line: Error message
+                3rd line: Content of Form field(s) 
+            -->
+
+            <label>Question: </label>
+            <div th:if="${#fields.hasErrors('question')}" th:errors="*{question}" style="color: red;"></div>
+            <textarea row="5" cols="50" th:field="*{question}"></textarea>
+            <br>
+
+            <label>Answer: </label>
+            <div th:if="${#fields.hasErrors('answer')}" th:errors="*{answer}" style="color: red;"></div>
+            <input type="radio" value="true" th:field="*{answer}">○
+            <input type="radio" value="false" th:field="*{answer}">×
+            <br>
+
+            <label>Author: </label>
+            <div th:if="${#fields.hasErrors('author')}" th:errors="*{author}" style="color: red;"></div>
+            <input type="text" th:field="*{author}" />
+            <br>
+
+            <input th:if="${id}" type="hidden" th:text="*{id}">
+            <input type="submit" value="Send!">
+        </form>
+
+        <!-- registered quiz list -->
+        <div th:if="${quizForm.newQuiz}" style="margin: 10px;">
+            <h3>Registered Quiz List: <a th:href="@{/quiz/play}">PLAY</a></h3>
+
+            <!-- status comment of deleting a quiz -->
+            <p th:if="${delcomplete}" th:text="${delcomplete}" style="color: aquamarine;"></p>
+            <p th:if="${msg}" th:text="${msg}" style="color: red;"></p>
+
+            <!-- list -->
+            <table border="1" th:unless="${#lists.isEmpty(list)}" style="table-layout: fixed;">
+                <tr>
+                    <th>ID</th>
+                    <th>Question</th>
+                    <th>Answer</th>
+                    <th>Author</th>
+                    <th>Edit</th>
+                    <th>Delete</th>
+                </tr>
+
+                <tr th:each="obj : ${list}" align="center">
+                    <td th:text="${obj.id}"></td>
+                    <td th:text="${obj.question}" align="left"></td>
+                    <td th:text="${obj.answer} == true ? '○' : '×'"></td>
+                    <td th:text="${obj.author}"></td>
+                    <td>
+                        <form method="GET" th:action="@{/quiz/{id}(id=${obj.id})}">
+                            <input type="submit" value="EDIT">
+                        </form>
+                    </td>
+                    <td>
+                        <form method="POST" th:action="@{/quiz/delete}">
+                            <input type="hidden" name="id" th:value="${obj.id}">
+                            <input type="submit" value="DELETE">
+                        </form>
+                    </td>
+                </tr>
+            </table>
+
+            <!-- when no registered quiz in DB -->
+            <p th:if="${#lists.isEmpty(list)}">No registered quiz</p>
+        </div>
+
+        <!-- link to Top page -->
+        <p th:unless="${quizForm.newQuiz}">
+            <a href="#" th:herf="@{/quiz}">Back to CRUD page</a>
+        </p>
+    </body>
+</html>

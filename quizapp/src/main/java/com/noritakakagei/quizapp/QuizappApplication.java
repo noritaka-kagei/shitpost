@@ -26,7 +26,7 @@ public class QuizappApplication {
 	private void execute() {
 		init();
 		showList();
-		showOne();
+		showOne(); 
 		update();
 		// delete();
 		doQuiz();
