@@ -4,82 +4,113 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 import com.noritakakagei.quizapp.entity.Quiz;
-import com.noritakakagei.quizapp.repository.QuizRepository;
+import com.noritakakagei.quizapp.service.QuizService;
 
 @SpringBootApplication
 public class QuizappApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(QuizappApplication.class, args)
-		.getBean(QuizappApplication.class)
-		.execute();;
+		SpringApplication.run(QuizappApplication.class, args);
 	}
 
 	// Dependency Injection
 	@Autowired
-	QuizRepository repo;
+	QuizService service;
 
 	private void execute() {
-		// init();
+		init();
 		showList();
 		showOne();
 		update();
-		delete();
-		showList();
+		// delete();
+		doQuiz();
 	}
 
 	private void init() {
-		Quiz quiz = new Quiz(null, "Is the Spring Framework?", true, "noritaka");
-		quiz = repo.save(quiz);
-		System.out.println("Update Quiz item: "+quiz);
+		System.out.println("--- Initialize Quiz Database ---");
 
-		Quiz quiz2 = new Quiz(null, "Does Spring MVC provide Batch function?", false, "noritaka");
-		quiz2 = repo.save(quiz2);
-		System.out.println("Register Quiz item: "+quiz2);
+		Quiz quiz1 = new Quiz(null, "Spring is Framework.", true, "me");
+		Quiz quiz2 = new Quiz(null, "Spring MVC provides Batch function.", false, "me");
+		Quiz quiz3 = new Quiz(null, "Java is object oriented programming model.", true, "me");
+		Quiz quiz4 = new Quiz(null, "@Component is annotation for create instance of attached class.", true, "me");
+		Quiz quiz5 = new Quiz(null, "Single Controller Pattern is a part of design pattern implemented by Spring MVC for handling all requests by one controller.", false, "me");
+
+		List<Quiz> list = new ArrayList<>();
+		Collections.addAll(list, quiz1, quiz2, quiz3, quiz4, quiz5);
+
+		for (Quiz quiz : list) {
+			service.insertQuiz(quiz);
+		}
+		
+		System.out.println("--------------------------------");
 	}
 
 	private void showList() {
-		System.out.println("--- Getting registered quizzes ---");
+		System.out.println("--- Getting all registered quizzes ---");
 
-		Iterable<Quiz> quizzes = repo.findAll();
+		Iterable<Quiz> quizzes = service.selectAll();
 		for (Quiz quiz : quizzes) {
 			System.out.println(quiz);
 		}
 		
-		System.out.println("------------------------------------");
+		System.out.println("--------------------------------------");
 	}
 
 	private void showOne() {
 		System.out.println("--- Getting a registered quiz ---");
 
-		Optional<Quiz> quiz = repo.findById(1);
-		if (quiz.isPresent()) {
-			System.out.println(quiz.get());
+		Optional<Quiz> quizOpt = service.selectOneById(1);
+		if (quizOpt.isPresent()) {
+			System.out.println(quizOpt.get());
 		} else {
-			System.out.println("Not found a matched quiz");
+			System.out.println("[FAIL] Not found a matched quiz");
 		}
 		
 		System.out.println("---------------------------------");
 	}
 
 	private void update() {
-		System.out.println("--- Start to update a quiz ---");
+		System.out.println("--- Updating a quiz ---");
 
-		Quiz quiz = new Quiz(1, "Is Spring framework?", true, "me");
-		quiz = repo.save(quiz);
+		Quiz quiz = new Quiz(1, "Spring(Boot, Web, MVC, Data, and so on) are frameworks", true, "me");
+		service.updateQuiz(quiz);
 		System.out.println("Updated a quiz: "+quiz);
 
-		System.out.println("------------------------------");
+		System.out.println("-----------------------");
 	}
 
 	private void delete() {
 		System.out.println("--- Deleting a quiz ---");
 
-		repo.deleteById(1);
+		service.deleteQuizById(1);
+		showList();
 
 		System.out.println("-----------------------");
+	}
+
+	private void doQuiz() {
+		System.out.println("--- Start Quiz Application ---");
+
+		Optional<Quiz> quizOpt = service.selectOneRandomQuiz();
+		if (quizOpt.isPresent()) {
+			System.out.println(quizOpt.get());
+		} else {
+			System.out.println("[FAIL] not found quiz in database");
+		}
+
+		Boolean expected = false;
+		Integer id = quizOpt.get().getId();
+
+		if (Boolean.TRUE.equals(service.checkQuiz(id, expected))) {
+			System.out.println("Correct!!");
+		} else {
+			System.out.println("Wrong....");
+		}
 	}
 }
