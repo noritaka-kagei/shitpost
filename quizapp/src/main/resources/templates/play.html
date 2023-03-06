@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8">
+        <title>Let's Play Quiz Application</title>
+    </head>
+
+    <body>
+        <h1>Welcome to Quiz Application Game!</h1>
+        <h2>Quiz</h2>
+
+        <th:block th:if="${msg}">
+            <p th:text="${msg}" style="color: red;"></p>
+            <a th:href="@{/quiz/}">TOP</a>
+        </th:block>
+
+        <th:block th:unless="${msg}">
+            <p th:text="${quizForm.question}">Question</p>
+            <form method="POST" th:action="@{/quiz/check}" th:object="${quizForm}">
+                <input type="hidden" th:field="*{id}">
+                <button name="answer" value="true">○</button>
+                <button name="answer" value="false">×</button>
+            </form>
+        </th:block>
+    </body>
+</html>

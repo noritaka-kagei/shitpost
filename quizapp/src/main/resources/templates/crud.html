@@ -38,7 +38,7 @@
             <input type="text" th:field="*{author}" />
             <br>
 
-            <input th:if="${id}" type="hidden" th:text="*{id}">
+            <input th:if="${id}" type="hidden" th:field="*{id}">
             <input type="submit" value="Send!">
         </form>
 
@@ -86,7 +86,7 @@
 
         <!-- link to Top page -->
         <p th:unless="${quizForm.newQuiz}">
-            <a href="#" th:herf="@{/quiz}">Back to CRUD page</a>
+            <a href="#" th:herf="@{/quiz}">Back to Top page</a>
         </p>
     </body>
 </html>

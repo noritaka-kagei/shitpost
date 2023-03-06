@@ -1,5 +1,8 @@
 package com.noritakakagei.quizapp.controller;
 
+import java.util.Optional;
+
+import org.apache.catalina.Server;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -7,8 +10,11 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.noritakakagei.quizapp.entity.Quiz;
@@ -40,7 +46,8 @@ public class QuizController {
     }
 
     @PostMapping("/insert")
-    public String insert(@Validated QuizForm form, 
+    public String insert(
+        @Validated QuizForm form, 
         BindingResult bindingResult, 
         Model model, 
         RedirectAttributes redirectAttributes) {
@@ -59,5 +66,100 @@ public class QuizController {
             service.insertQuiz(quiz);
             redirectAttributes.addFlashAttribute("complete", "Successfully registered the quiz.");
             return "redirect:/quiz";
+    }
+
+    @GetMapping("/{id}")
+    public String update(QuizForm form, @PathVariable Integer id, Model model) {
+        Optional<Quiz> quizOpt = service.selectOneById(id);
+        Optional<QuizForm> formOpt = quizOpt.map(t -> makeQuizForm(t));
+
+        if (formOpt.isPresent()) {
+            form = formOpt.get();
+        }
+
+        makeUpdateModel(form, model);
+
+        return "crud";
+    }
+
+    @PostMapping("/update")
+    public String update(
+        @Validated QuizForm form, 
+        BindingResult bindingResult,
+        Model model,
+        RedirectAttributes redirectAttributes) {
+
+            if (bindingResult.hasErrors()) {
+                makeUpdateModel(form, model);
+                return "crud";
+            }
+
+            Quiz quiz = makeQuiz(form);
+            service.updateQuiz(quiz);
+            
+            redirectAttributes.addFlashAttribute("complete", "Successfully updated a quiz!!");
+            return "redirect:/quiz/"+quiz.getId();
+    }
+
+    @PostMapping("/delete")
+    public String delete(
+        @RequestParam("id") String id,
+        Model model,
+        RedirectAttributes redirectAttributes) {
+            service.deleteQuizById(Integer.parseInt(id));
+            redirectAttributes.addFlashAttribute("delcomplete", "Successfully deleted a quiz");
+            return "redirect:/quiz";
+    }
+
+    @GetMapping("/play")
+    public String play(QuizForm form, Model model) {
+        Optional<Quiz> quizOpt = service.selectOneRandomQuiz();
+        if (! quizOpt.isPresent()) {
+            model.addAttribute("msg", "no quizzes in Database");
+            return "play";
+        }
+
+        Optional<QuizForm> formOpt = quizOpt.map(t -> makeQuizForm(t));
+        form = formOpt.get();
+        model.addAttribute("quizForm", form);
+        return "play";
+    }
+
+    @PostMapping("/check")
+    public String check(QuizForm form, @RequestParam Boolean answer, Model model) {
+        if (Boolean.TRUE.equals(service.checkQuiz(form.getId(), answer))) {
+            model.addAttribute("msg", "Correct!!!");
+        } else {
+            model.addAttribute("msg", "Wrong...");
+        }
+        return "answer";
+    }
+
+    private void makeUpdateModel(QuizForm form, Model model) {
+        form.setNewQuiz(false);
+        model.addAttribute("id", form.getId());
+        model.addAttribute("quizForm", form);
+        model.addAttribute("title", "Updating Form");
+    }
+
+    /** Convert QuizForm to Quiz */
+    private Quiz makeQuiz(QuizForm form) {
+        Quiz quiz = new Quiz();
+        quiz.setId(form.getId());
+        quiz.setQuestion(form.getQuestion());
+        quiz.setAnswer(form.getAnswer());
+        quiz.setAuthor(form.getAuthor());
+        return quiz;
+    }
+
+    /** Convert Quiz to QuizForm */
+    private QuizForm makeQuizForm(Quiz t) {
+        QuizForm form = new QuizForm();
+        form.setId(t.getId());
+        form.setQuestion(t.getQuestion());
+        form.setAnswer(t.getAnswer());
+        form.setAuthor(t.getAuthor());
+        form.setNewQuiz(false);
+        return form;
     }
 }

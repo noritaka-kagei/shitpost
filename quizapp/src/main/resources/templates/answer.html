@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8">
+        <title>Quiz Application | Answer</title>
+    </head>
+
+    <body>
+        <h1>Answer</h1>
+        <h2 th:text="${msg}" style="color: red;">message field</h2>
+        <a th:href="@{/quiz/play}">Replay</a>
+        <a th:href="@{/quiz}">Top</a>
+    </body>
+</html>
